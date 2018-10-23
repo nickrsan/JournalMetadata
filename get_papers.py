@@ -8,13 +8,9 @@ from habanero import Crossref  # CrossRef API access
 HABANERO_USERNAME = ""  # provide an email address so they can contact you if your script misbehaves
 ISSN = ""  # ISSN of the journal to dump data for
 BASE_FOLDER = os.path.dirname(os.path.abspath(__file__))
-OUTPUT_FILE = os.path.join(BASE_FOLDER, "{}.csv".format(ISSN))  # dumps out a CSV with the ISSN as its name in the same directory
-TITLE_FREQUENCY_FILE = os.path.join(BASE_FOLDER, "{}_title_frequency.csv".format(ISSN))  # dumps out a CSV with the ISSN as its name in the same directory
-AUTHOR_FREQUENCY_FILE = os.path.join(BASE_FOLDER, "{}_author_frequency.csv".format(ISSN))  # dumps out a CSV with the ISSN as its name in the same directory
-INSTITUTION_FREQUENCY_FILE = os.path.join(BASE_FOLDER, "{}_insitution_frequency.csv".format(ISSN))  # dumps out a CSV with the ISSN as its name in the same directory
 SLEEP_TIME = 0.05  # sleep for 50 ms between requests to be nice to the CrossRef API
 PER_PAGE = 1000  # How many items to download at once. 1000 is current max in API, lowering it will take longer, but could be desirable.
-KEYS_TO_KEEP = [u'DOI', u'reference', u'issued', u'prefix', u'relation', u'author', u'reference-count', u'ISSN', u'member', u'source', u'score', u'deposited', u'indexed', u'type', u'published-online', u'URL', u'is-referenced-by-count', u'volume', u'issn-type', u'link', u'published-print', u'journal-issue', u'references-count', u'short-container-title', u'publisher', u'content-domain', u'language', u'license', u'created', u'issue', u'title', u'alternative-id', u'container-title', u'page']  # which items should we dump to our spreadsheets?
+KEYS_TO_KEEP = [u'DOI', u'issued', u'prefix', u'relation', u'author', u'reference-count', u'ISSN', u'member', u'source', u'score', u'deposited', u'indexed', u'type', u'published-online', u'URL', u'is-referenced-by-count', u'volume', u'issn-type', u'link', u'published-print', u'journal-issue', u'references-count', u'short-container-title', u'publisher', u'content-domain', u'language', u'license', u'created', u'issue', u'title', u'alternative-id', u'container-title', u'page']  # which items should we dump to our spreadsheets? - can also add u'reference', but it can break CSV outputs
 
 def make_data_safe(paper, keys=KEYS_TO_KEEP):
 	"""
@@ -122,6 +118,9 @@ def get_papers(issn=ISSN, offset=0, per_page=PER_PAGE):
 
 def get_paper_info(issn=ISSN, per_page=PER_PAGE):
 
+	if ISSN is None or ISSN == "":
+		raise ValueError("ISSN is not defined - can't get paper info - please provide a valid ISSN as argument `issn` to function `get_paper_info`")
+		
 	num_papers = 0
 	collected_info = 0
 
@@ -146,7 +145,15 @@ def get_paper_info(issn=ISSN, per_page=PER_PAGE):
 	
 	return papers
 
-def write_derived_products(papers):
+def write_derived_products(papers, base_folder=BASE_FOLDER, issn=ISSN):
+	if ISSN is None or ISSN == "":
+		raise ValueError("ISSN is not defined - can't write out files")
+	
+	OUTPUT_FILE = os.path.join(base_folder, "{}.csv".format(issn))  # dumps out a CSV with the ISSN as its name in the same directory
+	TITLE_FREQUENCY_FILE = os.path.join(base_folder, "{}_title_frequency.csv".format(issn))  # dumps out a CSV with the ISSN as its name in the same directory
+	AUTHOR_FREQUENCY_FILE = os.path.join(base_folder, "{}_author_frequency.csv".format(issn))  # dumps out a CSV with the ISSN as its name in the same directory
+	INSTITUTION_FREQUENCY_FILE = os.path.join(base_folder, "{}_insitution_frequency.csv".format(issn))  # dumps out a CSV with the ISSN as its name in the same directory
+
 	title_frequency_info = frequency_titles(papers)
 	author_frequency_info = frequency_authors(papers)
 	institution_frequency_info = frequency_institutions(papers)

@@ -31,7 +31,7 @@ get_papers.HABANERO_USERNAME = "me@myemailaddress.com"
 
 # provide the ISSN for the journals you'd like to work with and get the data
 paper_data = get_papers.get_paper_info(issn="1111-1111") 
-get_papers.write_derived_products(paper_data)  # writes the outputs
+get_papers.write_derived_products(paper_data, issn="1111-1111")  # writes the outputs
 
 ```
 
