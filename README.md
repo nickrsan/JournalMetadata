@@ -23,16 +23,20 @@ Output location can be modified by changing BASE_FOLDER.
 For automation of many journals using this script, you can import it and use its functions. For example:
 
 ```python
-	import get_papers
-	
-	get_papers.HABANERO_USERNAME = "me@myemailaddress.com"  # make this real though - they use it to contact you before cutting you off if your script misbehaves
-	paper_data = get_papers.get_paper_info(issn="1111-1111")  # provide the ISSN for the journals you'd like to work with
-	get_papers.write_derived_products(paper_data)  # writes the outputs
+import get_papers
+
+# email address - make this real though
+# they use it to contact you before cutting you off if your script misbehaves
+get_papers.HABANERO_USERNAME = "me@myemailaddress.com" 
+
+# provide the ISSN for the journals you'd like to work with and get the data
+paper_data = get_papers.get_paper_info(issn="1111-1111") 
+get_papers.write_derived_products(paper_data)  # writes the outputs
 
 ```
 
 You can put that last two lines there in a loop to cover many ISSNs, etc, or write a script that accepts command line arguments. Those are the two core functions -
-everything else just supports each of those.
+everything else just supports each of those. If you do make something useful, please share it back as a pull request!
 
 ## License
 MIT License
