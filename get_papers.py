@@ -118,7 +118,7 @@ def get_papers(issn=ISSN, offset=0, per_page=PER_PAGE):
 
 def get_paper_info(issn=ISSN, per_page=PER_PAGE):
 
-	if ISSN is None or ISSN == "":
+	if issn is None or issn == "":
 		raise ValueError("ISSN is not defined - can't get paper info - please provide a valid ISSN as argument `issn` to function `get_paper_info`")
 		
 	num_papers = 0
@@ -146,7 +146,7 @@ def get_paper_info(issn=ISSN, per_page=PER_PAGE):
 	return papers
 
 def write_derived_products(papers, base_folder=BASE_FOLDER, issn=ISSN):
-	if ISSN is None or ISSN == "":
+	if issn is None or issn == "":
 		raise ValueError("ISSN is not defined - can't write out files")
 	
 	OUTPUT_FILE = os.path.join(base_folder, "{}.csv".format(issn))  # dumps out a CSV with the ISSN as its name in the same directory

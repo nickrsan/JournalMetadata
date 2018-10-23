@@ -45,6 +45,9 @@ MIT License
 As written, only articles with titles are kept. Outputs in the main spreadsheet will still have some JSON formatting in them - it's for your interpretation or future parsing, but this script doesn't parse everything down to the individual item level (eg: it won't split out multiple authors in the main spreadsheet - it keeps
 one author field)
 
+One additional field is skipped in the outputs named "reference" - it includes details of the references used in each paper. In my experience, it can break
+CSV formatting to include, so it is excluded by default. If you wish to include it, add it to the list KEYS_TO_KEEP near the top of the script.
+
 Frequency analysis is done on titles by splitting and counting the occurrence (non-case sensitive) of every word longer than two letters. You'll see some artifacts, ignore those and just look for items that might be of use in determining themes. I highly recommend bringing the datasets into Excel and turning the top row into filters so you can sort on the frequency field.
 
 For authors, first and last names were combined (where both existed) and the number of papers for each author were counted. Papers with multiple authors were attributed to all authors. My journal has a lot of book reviews, so it splits out paper titles that start with "book review" separately and provides counts for authors both for journal articles and for book reviews.
