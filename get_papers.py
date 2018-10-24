@@ -32,10 +32,13 @@ def _combine_dict_to_list(frequencies):
 		
 	return item_frequencies
 	
-def frequency_titles(papers):
+def frequency_titles(papers, ignore_book_reviews=False):
 	print("Getting frequency of words in titles")
 	words = {}
 	for paper in papers:
+		if ignore_book_reviews and _is_book_review(paper):
+			continue
+	
 		title = paper['title'][0].encode('utf-8')
 		title_words = re.findall("\w+", title)
 		for word in title_words:
@@ -48,12 +51,12 @@ def frequency_titles(papers):
 				
 	return _combine_dict_to_list(words)
 	
-def frequency_institutions(papers):
+def frequency_institutions(papers, ignore_book_reviews=False):
 	print("Getting frequency of institutions")
 	institutions = {}
 	
 	for paper in papers:
-		if not "author" in paper:
+		if not "author" in paper or (ignore_book_reviews and _is_book_review(paper)):  # if the paper doesn't have an author key, skip it.
 			continue
 		
 		for author in paper["author"]:
@@ -73,7 +76,9 @@ def frequency_institutions(papers):
 					institutions[affiliation_lower] += 1
 	
 	return _combine_dict_to_list(institutions)
-	
+
+def _is_book_review(paper):
+	return paper['title'][0].encode('utf-8').lower().startswith("book review")
 	
 def frequency_authors(papers):
 	print("Getting frequency of authors")
@@ -94,7 +99,7 @@ def frequency_authors(papers):
 				author_combined = ""
 				
 			author_combined = author_combined.encode('utf-8').replace(" ", "")
-			if paper['title'][0].encode('utf-8').lower().startswith("book review"):
+			if _is_book_review(paper):
 				author_combined +="_book_review"  # call these out separately so we know who is publishing and who is reviewing
 			
 			if author_combined not in authors:
@@ -145,7 +150,7 @@ def get_paper_info(issn=ISSN, per_page=PER_PAGE):
 	
 	return papers
 
-def write_derived_products(papers, base_folder=BASE_FOLDER, issn=ISSN):
+def write_derived_products(papers, base_folder=BASE_FOLDER, issn=ISSN, ignore_book_reviews=False):
 	if issn is None or issn == "":
 		raise ValueError("ISSN is not defined - can't write out files")
 	
@@ -154,9 +159,9 @@ def write_derived_products(papers, base_folder=BASE_FOLDER, issn=ISSN):
 	AUTHOR_FREQUENCY_FILE = os.path.join(base_folder, "{}_author_frequency.csv".format(issn))  # dumps out a CSV with the ISSN as its name in the same directory
 	INSTITUTION_FREQUENCY_FILE = os.path.join(base_folder, "{}_insitution_frequency.csv".format(issn))  # dumps out a CSV with the ISSN as its name in the same directory
 
-	title_frequency_info = frequency_titles(papers)
+	title_frequency_info = frequency_titles(papers, ignore_book_reviews=ignore_book_reviews)
 	author_frequency_info = frequency_authors(papers)
-	institution_frequency_info = frequency_institutions(papers)
+	institution_frequency_info = frequency_institutions(papers, ignore_book_reviews=ignore_book_reviews)
 	
 	print("Writing Paper Info")
 	with open(OUTPUT_FILE, 'wb') as output_file_handle:
