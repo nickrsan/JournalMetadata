@@ -117,11 +117,11 @@ def write_frequencies(items):
 			csv_writer.writerow(["Word", "Frequency"])
 			csv_writer.writerows(item["data"])
 	
-def get_papers(issn=ISSN, offset=0, per_page=PER_PAGE):
-	crossref_api = Crossref(mailto=HABANERO_USERNAME)
+def get_papers(issn=ISSN, offset=0, per_page=PER_PAGE, username=HABANERO_USERNAME):
+	crossref_api = Crossref(mailto=username)
 	return crossref_api.works(filter={"issn": issn}, offset=offset, limit=per_page)  # get a first set of papers
 
-def get_paper_info(issn=ISSN, per_page=PER_PAGE):
+def get_paper_info(issn=ISSN, per_page=PER_PAGE, username=HABANERO_USERNAME):
 
 	if issn is None or issn == "":
 		raise ValueError("ISSN is not defined - can't get paper info - please provide a valid ISSN as argument `issn` to function `get_paper_info`")
@@ -129,7 +129,7 @@ def get_paper_info(issn=ISSN, per_page=PER_PAGE):
 	num_papers = 0
 	collected_info = 0
 
-	paper_info = get_papers(issn, collected_info, per_page)
+	paper_info = get_papers(issn, collected_info, per_page, username=username)
 	num_papers = paper_info['message'][u'total-results']
 
 	print("Found {} papers".format(num_papers))

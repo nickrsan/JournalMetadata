@@ -13,7 +13,15 @@ This code was written and tested in Python 2, but should be Python 3 compatible
 
 ## Usage
 
-Currently, edit the script - the first two constants near the top `HABANERO_USERNAME` and `ISSN` must be filled in with your email address, and the ISSN of the
+Currently, two options:
+
+### Command Line
+First, make sure to install the `Fire` package with `python -m pip install fire`, then just run `python get_papers_cmd.py {issn} {email_address}`, replacing `{issn}` with the actual ISSN of the journal you wish to use this for and {email_address} with your email address - the email address will not be stored or used by this code in any way except to inform the CrossRef API who is downloading the data (so they can get in touch if the code is creating problems instead of banning you) - it's best to provide a valid address for you - it won't be spammed. 
+
+Results will be output in the same directory.
+
+### Editing the script
+If you wish to edit the code itself to run it,the first two constants near the top `HABANERO_USERNAME` and `ISSN` must be filled in with your email address, and the ISSN of the
 journal whose data you want to download, respectively. Save and run the script, and it will output files in the same directory as the script (Not the CWD). Your email
 address does not need to be registered with CrossRef, but you *should* provide one so that if the script misbehaves they can get in touch with you instead of banning
 you.
